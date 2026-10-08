@@ -3,20 +3,27 @@ const multer = require("multer");
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
-    const allowedMimeTypes = [
+    const allowedDocumentMimeTypes = [
         "application/pdf",
         "application/msword",
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ];
 
-    if (
-        file.mimetype.startsWith("image/") ||
-        allowedMimeTypes.includes(file.mimetype)
-    ) {
+    const allowedVideoMimeTypes = [
+        "video/mp4",
+        "video/webm",
+        "video/quicktime" // .mov files
+    ];
+
+    const isImage = file.mimetype.startsWith("image/");
+    const isDocument = allowedDocumentMimeTypes.includes(file.mimetype);
+    const isVideo = allowedVideoMimeTypes.includes(file.mimetype);
+
+    if (isImage || isDocument || isVideo) {
         cb(null, true);
     } else {
         cb(
-            new Error("Only images and documents (PDF, DOC, DOCX) are allowed"),
+            new Error("Only images, videos (MP4, WebM, MOV), and documents (PDF, DOC, DOCX) are allowed"),
             false
         );
     }
@@ -26,7 +33,7 @@ const upload = multer({
     storage,
     fileFilter,
     limits: {
-        fileSize: 5 * 1024 * 1024
+        fileSize: 100 * 1024 * 1024 // 100MB limit to accommodate videos
     }
 });
 

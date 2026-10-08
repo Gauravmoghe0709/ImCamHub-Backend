@@ -22,14 +22,17 @@ const validatePayload = (payload, requireAllFields = false) => {
     }
   }
 
+  // Validate displayOrder
+  if (requireAllFields && payload.displayOrder === undefined) {
+    return "displayOrder is required";
+  }
+  if (payload.displayOrder !== undefined &&
+      (typeof payload.displayOrder !== "number" || !Number.isFinite(payload.displayOrder))) {
+    return "displayOrder must be a valid number";
+  }
+
   if (payload.isActive !== undefined && parseBoolean(payload.isActive) === undefined) {
     return "isActive must be a boolean";
-  }
-  if (
-    payload.displayOrder !== undefined &&
-    (typeof payload.displayOrder !== "number" || !Number.isFinite(payload.displayOrder))
-  ) {
-    return "displayOrder must be a number";
   }
 
   return null;
@@ -50,7 +53,7 @@ async function createProblemSolutionComparison(req, res) {
     const comparison = await ProblemSolutionComparison.create({
       problem: req.body.problem.trim(),
       solution: req.body.solution.trim(),
-      ...(req.body.displayOrder !== undefined && { displayOrder: req.body.displayOrder }),
+      displayOrder: req.body.displayOrder,
       ...(req.body.isActive !== undefined && { isActive: parseBoolean(req.body.isActive) }),
     });
 

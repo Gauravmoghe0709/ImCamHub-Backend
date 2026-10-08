@@ -44,13 +44,13 @@ router.get("/footer/logo", getPublicFooterLogo);
 // =====================================================
 // Footer Logo — Admin Routes
 // =====================================================
-router.get("/admin/footer/logo", protectedRoute, getFooterLogo);
 router.post(
   "/admin/footer/logo",
   protectedRoute,
   upload.single("logo"),
   createFooterLogo
 );
+router.get("/admin/footer/logo", protectedRoute, getFooterLogo);
 router.put(
   "/admin/footer/logo/:id",
   protectedRoute,

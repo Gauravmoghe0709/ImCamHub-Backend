@@ -33,15 +33,28 @@ const sanitizeSection = (record) => {
   };
 };
 
-const uploadheroImage = async (req) => {
-  if (!req.file) {
-    throw new Error("heroImage is required");
+const uploadMedia = async (req, fieldName, folder) => {
+  const fileArray = req.files?.[fieldName];
+  if (!fileArray || fileArray.length === 0) {
+    return null;
+  }
+
+  const file = fileArray[0];
+
+  // Validate image size for dashboardImage (5MB limit)
+  if (fieldName === "dashboardImage" && file.size > 5 * 1024 * 1024) {
+    throw new Error("Hero image must be 5 MB or smaller");
+  }
+
+  // Validate video size for heroVideo (50MB limit)
+  if (fieldName === "heroVideo" && file.size > 50 * 1024 * 1024) {
+    throw new Error("Hero video must be 50 MB or smaller");
   }
 
   const response = await uploadImage(
-    req.file.buffer,
-    req.file.originalname || "herosection-image",
-    "imcamhub/homepage/herosection"
+    file.buffer,
+    file.originalname || `herosection-${fieldName}`,
+    folder
   );
 
   return response?.url;
@@ -58,8 +71,6 @@ const validateRequiredTextFields = (payload, fields) => {
 };
 
 async function createheroSection(req, res) {
-
-
   try {
     const requiredFields = [
       "primaryButtonText",
@@ -69,14 +80,6 @@ async function createheroSection(req, res) {
     ];
 
     const missingField = validateRequiredTextFields(req.body, requiredFields);
-
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "heroImage is required",
-      });
-    }
-
     if (req.body.isActive === undefined || req.body.isActive === null || req.body.isActive === "") {
       return res.status(400).json({
         success: false,
@@ -91,12 +94,33 @@ async function createheroSection(req, res) {
       });
     }
 
-    const uploadedUrl = await uploadheroImage(req);
+    // Upload image (optional)
+    let uploadedImageUrl = null;
+    try {
+      uploadedImageUrl = await uploadMedia(req, "dashboardImage", "imcamhub/homepage/herosection");
+    } catch (imageError) {
+      return res.status(400).json({
+        success: false,
+        message: imageError.message,
+      });
+    }
 
-    const heroSection = await heroSection.create({
+    // Upload video if provided (optional)
+    let uploadedVideoUrl = null;
+    try {
+      uploadedVideoUrl = await uploadMedia(req, "heroVideo", "imcamhub/homepage/herosection/videos");
+    } catch (videoError) {
+      return res.status(400).json({
+        success: false,
+        message: videoError.message,
+      });
+    }
+
+    const newHeroSection = await heroSection.create({
       heading: normalizeText(req.body.heading) || "",
       description: normalizeText(req.body.description) || "",
-      heroImage: uploadedUrl,
+      dashboardImage: uploadedImageUrl || null,
+      heroVideo: uploadedVideoUrl || null,
       primaryButtonText: normalizeText(req.body.primaryButtonText),
       primaryButtonLink: normalizeText(req.body.primaryButtonLink),
       secondaryButtonText: normalizeText(req.body.secondaryButtonText),
@@ -107,7 +131,7 @@ async function createheroSection(req, res) {
     return res.status(201).json({
       success: true,
       message: "hero section created successfully",
-      data: sanitizeSection(heroSection),
+      data: newHeroSection,
     });
   } catch (error) {
     console.error(error);
@@ -147,9 +171,9 @@ async function getheroSectionById(req, res) {
       });
     }
 
-    const heroSection = await heroSection.findById(id);
+    const heroSectionRecord = await heroSection.findById(id);
 
-    if (!heroSection) {
+    if (!heroSectionRecord) {
       return res.status(404).json({
         success: false,
         message: "hero section not found",
@@ -159,7 +183,7 @@ async function getheroSectionById(req, res) {
     return res.status(200).json({
       success: true,
       message: "hero section fetched successfully",
-      data: heroSection,
+      data: heroSectionRecord,
     });
   } catch (error) {
     console.error(error);
@@ -211,9 +235,30 @@ async function updateheroSection(req, res) {
       }
     });
 
-    if (req.file) {
-      const uploadedUrl = await uploadheroImage(req);
-      updatePayload.heroImage = uploadedUrl;
+    // Handle image update if new image provided
+    if (req.files?.dashboardImage && req.files.dashboardImage.length > 0) {
+      try {
+        const uploadedImageUrl = await uploadMedia(req, "dashboardImage", "imcamhub/homepage/herosection");
+        updatePayload.dashboardImage = uploadedImageUrl;
+      } catch (imageError) {
+        return res.status(400).json({
+          success: false,
+          message: imageError.message,
+        });
+      }
+    }
+
+    // Handle video update if new video provided
+    if (req.files?.heroVideo && req.files.heroVideo.length > 0) {
+      try {
+        const uploadedVideoUrl = await uploadMedia(req, "heroVideo", "imcamhub/homepage/herosection/videos");
+        updatePayload.heroVideo = uploadedVideoUrl;
+      } catch (videoError) {
+        return res.status(400).json({
+          success: false,
+          message: videoError.message,
+        });
+      }
     }
 
     const updatedSection = await heroSection.findByIdAndUpdate(id, updatePayload, {
@@ -246,9 +291,9 @@ async function deleteheroSection(req, res) {
       });
     }
 
-    const heroSection = await heroSection.findByIdAndDelete(id);
+    const heroSectionRecord = await heroSection.findByIdAndDelete(id);
 
-    if (!heroSection) {
+    if (!heroSectionRecord) {
       return res.status(404).json({
         success: false,
         message: "hero section not found",
@@ -258,7 +303,7 @@ async function deleteheroSection(req, res) {
     return res.status(200).json({
       success: true,
       message: "hero section deleted successfully",
-      data: heroSection,
+      data: heroSectionRecord,
     });
   } catch (error) {
     console.error(error);
@@ -289,13 +334,13 @@ async function toggleheroSectionStatus(req, res) {
       });
     }
 
-    const heroSection = await heroSection.findByIdAndUpdate(
+    const heroSectionRecord = await heroSection.findByIdAndUpdate(
       id,
       { isActive: parseBoolean(isActive) },
       { new: true }
     );
 
-    if (!heroSection) {
+    if (!heroSectionRecord) {
       return res.status(404).json({
         success: false,
         message: "hero section not found",
@@ -305,7 +350,7 @@ async function toggleheroSectionStatus(req, res) {
     return res.status(200).json({
       success: true,
       message: "hero section status updated successfully",
-      data: heroSection,
+      data: heroSectionRecord,
     });
   } catch (error) {
     console.error(error);
@@ -318,9 +363,9 @@ async function toggleheroSectionStatus(req, res) {
 
 async function getActiveheroSection(req, res) {
   try {
-    const heroSection = await heroSection.findOne({ isActive: true }).sort({ updatedAt: -1, createdAt: -1 });
+    const heroSectionRecord = await heroSection.findOne({ isActive: true }).sort({ updatedAt: -1, createdAt: -1 });
 
-    if (!heroSection) {
+    if (!heroSectionRecord) {
       return res.status(404).json({
         success: false,
         message: "No active hero section found",
@@ -329,7 +374,7 @@ async function getActiveheroSection(req, res) {
 
     return res.status(200).json({
       success: true,
-      data: sanitizeSection(heroSection),
+      data: heroSectionRecord,
     });
   } catch (error) {
     console.error(error);

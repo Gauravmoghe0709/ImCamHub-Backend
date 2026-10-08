@@ -1,5 +1,7 @@
 const express = require("express")
 const cookieparser = require("cookie-parser")
+const cors = require("cors")
+const AuthRoute = require("./router/Auth.router")
 const HomeRoutes = require("./router/home.routes")
 const AdminDashboardPageRoutes = require("./router/AdminDashboardPage.router")
 const CaseworkerPortalpageRoutes = require("./router/CaseworkerPortalpage.router")
@@ -14,8 +16,12 @@ const app = express()
 
 app.use(express.json())
 app.use(cookieparser())
+app.use(cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    credentials:true,
+}))
 
-
+app.use("",AuthRoute)
 app.use("/api", HomeRoutes)
 app.use("/api", AdminDashboardPageRoutes)
 app.use("/api", CaseworkerPortalpageRoutes)

@@ -1,8 +1,11 @@
 const express = require("express");
+
 const upload = require("../middlewares/Upload");
+
 const protectedRoute = require("../middlewares/Authmiddleware");
 
-const router = express.Router()
+const router = express.Router();
+
 const {
   getPublicClientPortalHero,
   getAllClientPortalHeroes,
@@ -12,6 +15,7 @@ const {
   deleteClientPortalHero,
   toggleClientPortalHeroStatus,
 } = require("../controllers/ClientPortal Controllers/ClientPortalHero.controllers");
+
 const {
   getPublicClientPortalContent,
   getAllClientPortalContent,
@@ -21,6 +25,7 @@ const {
   deleteClientPortalContent,
   toggleClientPortalContentStatus,
 } = require("../controllers/ClientPortal controllers/ClientPortalContent.controller");
+
 const {
   getPublicClientPortalDailyWorkflow,
   getAllClientPortalDailyWorkflow,
@@ -30,6 +35,7 @@ const {
   deleteClientPortalDailyWorkflow,
   toggleClientPortalDailyWorkflowStatus,
 } = require("../controllers/ClientPortal controllers/ClientPortalDailyWorkflow.controller");
+
 const {
   getClientPortalHeader,
   createClientPortalHeader,
@@ -74,48 +80,54 @@ const {
 } = require("../controllers/ClientPortal controllers/ClientPortalCta.controller");
 
 
-
 // =====================================================
 // Admin Dashboard Hero — Public Route
 // =====================================================
-router.get("/public/admin-dashboard-hero", getPublicClientPortalHero);
+
+router.get(
+  "/public/clientportal-hero",
+  getPublicClientPortalHero
+);
+
 
 // =====================================================
 // Admin Dashboard Hero — Admin Routes
+// =====================================================
+
 router.post(
-  "/admin/dashboard/hero",
+  "/admin/clientportal/hero",
   protectedRoute,
-  upload.single("dashboardImage"),
+  upload.single("clientportalImage"),
   createClientPortalHero
 );
 
 router.get(
-  "/admin/dashboard/hero",
+  "/admin/clientportal/hero",
   protectedRoute,
   getAllClientPortalHeroes
 );
 
 router.get(
-  "/admin/dashboard/hero/:id",
+  "/admin/clientportal/hero/:id",
   protectedRoute,
   getClientPortalHeroById
 );
 
 router.put(
-  "/admin/dashboard/hero/:id",
+  "/admin/clientportal/hero/:id",
   protectedRoute,
-  upload.single("dashboardImage"),
+  upload.single("clientportalImage"),
   updateClientPortalHero
 );
 
 router.delete(
-  "/admin/dashboard/hero/:id",
+  "/admin/clientportal/hero/:id",
   protectedRoute,
   deleteClientPortalHero
 );
 
 router.patch(
-  "/admin/dashboard/hero/:id/status",
+  "/admin/clientportal/hero/:id/status",
   protectedRoute,
   toggleClientPortalHeroStatus
 );
@@ -124,57 +136,27 @@ router.patch(
 // =====================================================
 // Client Portal Content — Public Route
 // =====================================================
-router.get("/ClientPortal", getPublicClientPortalContent);
-
-// =====================================================
-// Client Portal Content — Admin Routes
-// =====================================================
-router.post(
-  "/admin/ClientPortal",
-  protectedRoute,
-  upload.single("hero_image"),
-  createClientPortalContent
-);
 
 router.get(
-  "/admin/ClientPortal",
-  protectedRoute,
-  getAllClientPortalContent
+  "/ClientPortal",
+  getPublicClientPortalContent
 );
+
+
+// =====================================================
+// Client Portal Daily Workflow — Public Route
+// =====================================================
 
 router.get(
-  "/admin/ClientPortal/:id",
-  protectedRoute,
-  getClientPortalContentById
+  "/ClientPortal/day-in-the-life",
+  getPublicClientPortalDailyWorkflow
 );
 
-router.put(
-  "/admin/ClientPortal/:id",
-  protectedRoute,
-  upload.single("hero_image"),
-  updateClientPortalContent
-);
-
-router.delete(
-  "/admin/ClientPortal/:id",
-  protectedRoute,
-  deleteClientPortalContent
-);
-
-router.patch(
-  "/admin/ClientPortal/:id/status",
-  protectedRoute,
-  toggleClientPortalContentStatus
-);
 
 // =====================================================
-// ClientPortal Daily Workflow — Public Route
+// Client Portal Daily Workflow — Admin Routes
 // =====================================================
-router.get("/ClientPortal/day-in-the-life", getPublicClientPortalDailyWorkflow);
 
-// =====================================================
-// ClientPortal Daily Workflow — Admin Routes
-// =====================================================
 router.post(
   "/admin/ClientPortal/day-in-the-life",
   protectedRoute,
@@ -217,65 +199,185 @@ router.patch(
 // =====================================================
 // Client Portal Header — Public Route
 // =====================================================
-router.get("/ClientPortal/header", getClientPortalHeader);
+
+router.get(
+  "/ClientPortal/header",
+  getClientPortalHeader
+);
+
 
 // =====================================================
 // Client Portal Header — Admin Routes
 // =====================================================
-router.get("/admin/ClientPortal/header", protectedRoute, getClientPortalHeader);
-router.post("/admin/ClientPortal/header", protectedRoute, createClientPortalHeader);
-router.put("/admin/ClientPortal/header/:id", protectedRoute, updateClientPortalHeader);
-router.delete("/admin/ClientPortal/header/:id", protectedRoute, deleteClientPortalHeader);
+
+router.post(
+  "/admin/ClientPortal/header",
+  protectedRoute,
+  createClientPortalHeader
+);
+
+router.get(
+  "/admin/ClientPortal/header",
+  protectedRoute,
+  getClientPortalHeader
+);
+
+router.put(
+  "/admin/ClientPortal/header/:id",
+  protectedRoute,
+  updateClientPortalHeader
+);
+
+router.delete(
+  "/admin/ClientPortal/header/:id",
+  protectedRoute,
+  deleteClientPortalHeader
+);
+
 
 // =====================================================
 // Client Portal Cards — Public Route
 // =====================================================
-router.get("/ClientPortal/cards", getAllClientPortalCards);
+
+router.get(
+  "/ClientPortal/cards",
+  getAllClientPortalCards
+);
+
 
 // =====================================================
 // Client Portal Cards — Admin Routes
 // =====================================================
-router.get("/admin/ClientPortal/cards", protectedRoute, adminGetAllClientPortalCards);
-router.get("/admin/ClientPortal/cards/:id", protectedRoute, getClientPortalCardById);
-router.post("/admin/ClientPortal/cards", protectedRoute, createClientPortalCard);
-router.put("/admin/ClientPortal/cards/:id", protectedRoute, updateClientPortalCard);
-router.delete("/admin/ClientPortal/cards/:id", protectedRoute, deleteClientPortalCard);
+
+router.post(
+  "/admin/ClientPortal/cards",
+  protectedRoute,
+  createClientPortalCard
+);
+
+router.get(
+  "/admin/ClientPortal/cards",
+  protectedRoute,
+  adminGetAllClientPortalCards
+);
+
+router.get(
+  "/admin/ClientPortal/cards/:id",
+  protectedRoute,
+  getClientPortalCardById
+);
+
+router.put(
+  "/admin/ClientPortal/cards/:id",
+  protectedRoute,
+  updateClientPortalCard
+);
+
+router.delete(
+  "/admin/ClientPortal/cards/:id",
+  protectedRoute,
+  deleteClientPortalCard
+);
+
 
 // =====================================================
 // Client Portal FAQ Header — Public Route
 // =====================================================
-router.get("/ClientPortal/faq-header", getPublicClientPortalFaqHeader);
+
+router.get(
+  "/ClientPortal/faq-header",
+  getPublicClientPortalFaqHeader
+);
+
 
 // =====================================================
 // Client Portal FAQ Header — Admin Routes
 // =====================================================
-router.get("/admin/ClientPortal/faq-header", protectedRoute, getClientPortalFaqHeader);
-router.post("/admin/ClientPortal/faq-header", protectedRoute, createClientPortalFaqHeader);
-router.put("/admin/ClientPortal/faq-header/:id", protectedRoute, updateClientPortalFaqHeader);
-router.delete("/admin/ClientPortal/faq-header/:id", protectedRoute, deleteClientPortalFaqHeader);
+
+router.post(
+  "/admin/ClientPortal/faq-header",
+  protectedRoute,
+  createClientPortalFaqHeader
+);
+
+router.get(
+  "/admin/ClientPortal/faq-header",
+  protectedRoute,
+  getClientPortalFaqHeader
+);
+
+router.put(
+  "/admin/ClientPortal/faq-header/:id",
+  protectedRoute,
+  updateClientPortalFaqHeader
+);
+
+router.delete(
+  "/admin/ClientPortal/faq-header/:id",
+  protectedRoute,
+  deleteClientPortalFaqHeader
+);
+
 
 // =====================================================
 // Client Portal FAQ Items — Public Route
 // =====================================================
-router.get("/ClientPortal/faqs", getPublicClientPortalFaqs);
+
+router.get(
+  "/ClientPortal/faqs",
+  getPublicClientPortalFaqs
+);
+
 
 // =====================================================
 // Client Portal FAQ Items — Admin Routes
 // =====================================================
-router.get("/admin/ClientPortal/faqs", protectedRoute, getAllClientPortalFaqs);
-router.get("/admin/ClientPortal/faqs/:id", protectedRoute, getClientPortalFaqById);
-router.post("/admin/ClientPortal/faqs", protectedRoute, createClientPortalFaq);
-router.put("/admin/ClientPortal/faqs/:id", protectedRoute, updateClientPortalFaq);
-router.delete("/admin/ClientPortal/faqs/:id", protectedRoute, deleteClientPortalFaq);
+
+router.post(
+  "/admin/ClientPortal/faqs",
+  protectedRoute,
+  createClientPortalFaq
+);
+
+router.get(
+  "/admin/ClientPortal/faqs",
+  protectedRoute,
+  getAllClientPortalFaqs
+);
+
+router.get(
+  "/admin/ClientPortal/faqs/:id",
+  protectedRoute,
+  getClientPortalFaqById
+);
+
+router.put(
+  "/admin/ClientPortal/faqs/:id",
+  protectedRoute,
+  updateClientPortalFaq
+);
+
+router.delete(
+  "/admin/ClientPortal/faqs/:id",
+  protectedRoute,
+  deleteClientPortalFaq
+);
+
 
 // =====================================================
 // Client Portal CTA — Public Route
 // =====================================================
-router.get("/ClientPortal/cta", getClientPortalCta);
+
+router.get(
+  "/ClientPortal/cta",
+  getClientPortalCta
+);
+
 
 // =====================================================
 // Client Portal CTA — Admin Routes
 // =====================================================
+
 router.post(
   "/admin/ClientPortal/cta",
   protectedRoute,
@@ -311,5 +413,50 @@ router.patch(
   protectedRoute,
   toggleClientPortalCtaStatus
 );
+
+
+// =====================================================
+// Client Portal Content — Admin Routes
+// GENERIC /:id MUST BE AFTER SPECIFIC ROUTES
+// =====================================================
+
+router.post(
+  "/admin/ClientPortal",
+  protectedRoute,
+  upload.single("hero_image"),
+  createClientPortalContent
+);
+
+router.get(
+  "/admin/ClientPortal",
+  protectedRoute,
+  getAllClientPortalContent
+);
+
+router.get(
+  "/admin/ClientPortal/:id",
+  protectedRoute,
+  getClientPortalContentById
+);
+
+router.put(
+  "/admin/ClientPortal/:id",
+  protectedRoute,
+  upload.single("hero_image"),
+  updateClientPortalContent
+);
+
+router.delete(
+  "/admin/ClientPortal/:id",
+  protectedRoute,
+  deleteClientPortalContent
+);
+
+router.patch(
+  "/admin/ClientPortal/:id/status",
+  protectedRoute,
+  toggleClientPortalContentStatus
+);
+
 
 module.exports = router;

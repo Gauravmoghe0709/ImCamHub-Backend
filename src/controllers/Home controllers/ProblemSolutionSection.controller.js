@@ -1,7 +1,8 @@
 const { isValidObjectId } = require("mongoose");
 const ProblemSolutionSection = require("../../model/Homepage/problemSolutionSection.model");
 
-const requiredTextFields = ["badgeText", "title", "highlightedTitle", "description"];
+const requiredTextFields = ["title", "highlightedTitle", "description"];
+const optionalTextFields = ["badgeText"];
 
 const parseBoolean = (value) => {
   if (typeof value === "boolean") return value;
@@ -14,6 +15,7 @@ const parseBoolean = (value) => {
 };
 
 const validatePayload = (payload, requireAllFields = false) => {
+  // Validate required fields
   if (requireAllFields) {
     for (const field of requiredTextFields) {
       if (typeof payload[field] !== "string" || !payload[field].trim()) {
@@ -26,6 +28,14 @@ const validatePayload = (payload, requireAllFields = false) => {
           (typeof payload[field] !== "string" || !payload[field].trim())) {
         return `${field} must be a non-empty string`;
       }
+    }
+  }
+
+  // Validate optional fields (if provided, must be valid)
+  for (const field of optionalTextFields) {
+    if (payload[field] !== undefined &&
+        (typeof payload[field] !== "string")) {
+      return `${field} must be a string`;
     }
   }
 
@@ -58,7 +68,7 @@ async function createProblemSolutionSection(req, res) {
     }
 
     const section = await ProblemSolutionSection.create({
-      badgeText: req.body.badgeText.trim(),
+      badgeText: req.body.badgeText ? req.body.badgeText.trim() : "",
       title: req.body.title.trim(),
       highlightedTitle: req.body.highlightedTitle.trim(),
       description: req.body.description.trim(),
@@ -128,6 +138,9 @@ async function updateProblemSolutionSection(req, res) {
     const updatePayload = {};
     for (const field of requiredTextFields) {
       if (req.body[field] !== undefined) updatePayload[field] = req.body[field].trim();
+    }
+    for (const field of optionalTextFields) {
+      if (req.body[field] !== undefined) updatePayload[field] = req.body[field] ? req.body[field].trim() : "";
     }
     if (req.body.isActive !== undefined) updatePayload.isActive = parseBoolean(req.body.isActive);
     if (req.body.displayOrder !== undefined) updatePayload.displayOrder = req.body.displayOrder;

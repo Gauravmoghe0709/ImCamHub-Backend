@@ -1,402 +1,401 @@
-const express = require("express");
-const upload = require("../middlewares/Upload");
-const protectedRoute = require("../middlewares/Authmiddleware");
+  const express = require("express");
+  const upload = require("../middlewares/Upload");
+  const protectedRoute = require("../middlewares/Authmiddleware");
 
-const router = express.Router();
+  const router = express.Router();
 
-const {
-  getPublicSolutionsPageSections,
-  createSolutionsPageSection,
-  getAllSolutionsPageSections,
-  getSolutionsPageSectionById,
-  updateSolutionsPageSection,
-  deleteSolutionsPageSection,
-  toggleSolutionsPageSectionStatus,
-} = require("../controllers/SolutionsPage controllers/SolutionsPageSection.controller");
+  const {
+    getPublicSolutionsPageSections,
+    createSolutionsPageSection,
+    getAllSolutionsPageSections,
+    getSolutionsPageSectionById,
+    updateSolutionsPageSection,
+    deleteSolutionsPageSection,
+    toggleSolutionsPageSectionStatus,
+  } = require("../controllers/SolutionsPage controllers/SolutionsPageSection.controller");
 
-const {
-  getPublicSolutionsHeader,
-  getAdminSolutionsHeader,
-  createSolutionsHeader,
-  updateSolutionsHeader,
-  deleteSolutionsHeader,
-  toggleSolutionsHeaderStatus,
-} = require("../controllers/SolutionsPage controllers/SolutionsHeader.controller");
+  const {
+    getPublicSolutionsHeader,
+    getAdminSolutionsHeader,
+    createSolutionsHeader,
+    updateSolutionsHeader,
+    deleteSolutionsHeader,
+    toggleSolutionsHeaderStatus,
+  } = require("../controllers/SolutionsPage controllers/SolutionsHeader.controller");
 
-const {
-  getPublicSolutionsCards,
-  getAdminSolutionsCards,
-  getSolutionsCardById,
-  createSolutionsCard,
-  updateSolutionsCard,
-  deleteSolutionsCard,
-  toggleSolutionsCardStatus,
-} = require("../controllers/SolutionsPage controllers/SolutionsFeatureCard.controller");
+  const {
+    getPublicSolutionsCards,
+    getAdminSolutionsCards,
+    getSolutionsCardById,
+    createSolutionsCard,
+    updateSolutionsCard,
+    deleteSolutionsCard,
+    toggleSolutionsCardStatus,
+  } = require("../controllers/SolutionsPage controllers/SolutionsFeatureCard.controller");
 
-const {
-  getOurSolutionsHeader,
-  createOurSolutionsHeader,
-  getAllOurSolutionsHeaders,
-  getOurSolutionsHeaderById,
-  updateOurSolutionsHeader,
-  deleteOurSolutionsHeader,
-  toggleOurSolutionsHeaderStatus,
-} = require("../controllers/SolutionsPage controllers/OurSolutionsHeader.controller");
+  const {
+    getOurSolutionsHeader,
+    createOurSolutionsHeader,
+    getAllOurSolutionsHeaders,
+    getOurSolutionsHeaderById,
+    updateOurSolutionsHeader,
+    deleteOurSolutionsHeader,
+    toggleOurSolutionsHeaderStatus,
+  } = require("../controllers/SolutionsPage controllers/OurSolutionsHeader.controller");
 
-const {
-  getOurSolutionsCards,
-  createOurSolutionsCard,
-  getAllOurSolutionsCards,
-  getOurSolutionsCardById,
-  updateOurSolutionsCard,
-  deleteOurSolutionsCard,
-  toggleOurSolutionsCardStatus,
-} = require("../controllers/SolutionsPage controllers/OurSolutionsCards.controller");
+  const {
+    getOurSolutionsCards,
+    createOurSolutionsCard,
+    getAllOurSolutionsCards,
+    getOurSolutionsCardById,
+    updateOurSolutionsCard,
+    deleteOurSolutionsCard,
+    toggleOurSolutionsCardStatus,
+  } = require("../controllers/SolutionsPage controllers/OurSolutionsCards.controller");
 
-const {
-  getHowItWorksHeader,
-  createHowItWorksHeader,
-  getAdminHowItWorksHeaders,
-  updateHowItWorksHeader,
-  deleteHowItWorksHeader,
-} = require("../controllers/SolutionsPage controllers/HowItWorksHeaderController");
+  const {
+    getHowItWorksHeader,
+    createHowItWorksHeader,
+    getAdminHowItWorksHeaders,
+    updateHowItWorksHeader,
+    deleteHowItWorksHeader,
+  } = require("../controllers/SolutionsPage controllers/HowItWorksHeaderController");
 
-const {
-  getHowItWorksProcesses,
-  createHowItWorksProcess,
-  getAdminHowItWorksProcesses,
-  getHowItWorksProcessById,
-  updateHowItWorksProcess,
-  deleteHowItWorksProcess,
-} = require("../controllers/SolutionsPage controllers/HowItWorksProcessController");
+  const {
+    getHowItWorksProcesses,
+    createHowItWorksProcess,
+    getAdminHowItWorksProcesses,
+    getHowItWorksProcessById,
+    updateHowItWorksProcess,
+    deleteHowItWorksProcess,
+  } = require("../controllers/SolutionsPage controllers/HowItWorksProcessController");
 
-const {
-  getPublicFinalCta,
-  createFinalCta,
-  getAllFinalCtas,
-  getFinalCtaById,
-  updateFinalCta,
-  deleteFinalCta,
-} = require("../controllers/SolutionsPage controllers/FinalCtaController");
+  const {
+    getPublicFinalCta,
+    createFinalCta,
+    getAllFinalCtas,
+    getFinalCtaById,
+    updateFinalCta,
+    deleteFinalCta,
+  } = require("../controllers/SolutionsPage controllers/FinalCtaController");
 
-// =====================================================
-// Solutions Page — Public Route
-// =====================================================
-router.get("/solutions-page", getPublicSolutionsPageSections);
+  // =====================================================
+  // Solutions Page — Public Route
+  // =====================================================
+  router.get("/solutions-page", getPublicSolutionsPageSections);
 
-// =====================================================
-// Solutions Page — Admin Routes
-// =====================================================
-router.post(
-  "/admin/solutions-page",
-  protectedRoute,
-  upload.single("backgroundImage"),
-  createSolutionsPageSection
-);
+  // =====================================================
+  // Solutions Page — Admin Routes
+  // =====================================================
+  router.post(
+    "/admin/solutions-page",
+    protectedRoute,
+    upload.single("backgroundImage"),
+    createSolutionsPageSection
+  );
 
-router.get("/admin/solutions-page", protectedRoute, getAllSolutionsPageSections);
+  router.get("/admin/solutions-page", protectedRoute, getAllSolutionsPageSections);
 
-router.get(
-  "/admin/solutions-page/:id",
-  protectedRoute,
-  getSolutionsPageSectionById
-);
+  router.get(
+    "/admin/solutions-page/:id",
+    protectedRoute,
+    getSolutionsPageSectionById
+  );
 
-router.put(
-  "/admin/solutions-page/:id",
-  protectedRoute,
-  upload.single("backgroundImage"),
-  updateSolutionsPageSection
-);
+  router.put(
+    "/admin/solutions-page/:id",
+    protectedRoute,
+    upload.single("backgroundImage"),
+    updateSolutionsPageSection
+  );
 
-router.delete(
-  "/admin/solutions-page/:id",
-  protectedRoute,
-  deleteSolutionsPageSection
-);
+  router.delete(
+    "/admin/solutions-page/:id",
+    protectedRoute,
+    deleteSolutionsPageSection
+  );
 
-router.patch(
-  "/admin/solutions-page/:id/status",
-  protectedRoute,
-  toggleSolutionsPageSectionStatus
-);
+  router.patch(
+    "/admin/solutions-page/:id/status",
+    protectedRoute,
+    toggleSolutionsPageSectionStatus
+  );
 
-// =====================================================
-// Solutions Header — Public Route
-// =====================================================
-router.get("/solutions/header", getPublicSolutionsHeader);
+  // =====================================================
+  // Solutions Header — Public Route
+  // =====================================================
+  router.get("/solutions/header", getPublicSolutionsHeader);
 
-// =====================================================
-// Solutions Header — Admin Routes
-// =====================================================
-router.get("/admin/solutions/header", protectedRoute, getAdminSolutionsHeader);
+  // =====================================================
+  // Solutions Header — Admin Routes
+  // =====================================================
+   router.post(
+    "/admin/solutions/header",
+    protectedRoute,
+    createSolutionsHeader
+  );
+  router.get("/admin/solutions/header", protectedRoute, getAdminSolutionsHeader);
+  router.put(
+    "/admin/solutions/header/:id",
+    protectedRoute,
+    updateSolutionsHeader
+  );
 
-router.post(
-  "/admin/solutions/header",
-  protectedRoute,
-  createSolutionsHeader
-);
+  router.delete(
+    "/admin/solutions/header/:id",
+    protectedRoute,
+    deleteSolutionsHeader
+  );
 
-router.put(
-  "/admin/solutions/header/:id",
-  protectedRoute,
-  updateSolutionsHeader
-);
+  router.patch(
+    "/admin/solutions/header/:id/status",
+    protectedRoute,
+    toggleSolutionsHeaderStatus
+  );
 
-router.delete(
-  "/admin/solutions/header/:id",
-  protectedRoute,
-  deleteSolutionsHeader
-);
+  // =====================================================
+  // Solutions Cards — Public Route
+  // =====================================================
+  router.get("/solutions/cards", getPublicSolutionsCards);
 
-router.patch(
-  "/admin/solutions/header/:id/status",
-  protectedRoute,
-  toggleSolutionsHeaderStatus
-);
+  // =====================================================
+  // Solutions Cards — Admin Routes
+  // =====================================================
+  
+   router.post(
+    "/admin/solutions/cards",
+    protectedRoute,
+    upload.single("image"),
+    createSolutionsCard
+  );
+  router.get(
+    "/admin/solutions/cards",
+    protectedRoute,
+    getAdminSolutionsCards
+  );
 
-// =====================================================
-// Solutions Cards — Public Route
-// =====================================================
-router.get("/solutions/cards", getPublicSolutionsCards);
+  router.get(
+    "/admin/solutions/cards/:id",
+    protectedRoute,
+    getSolutionsCardById
+  );
 
-// =====================================================
-// Solutions Cards — Admin Routes
-// =====================================================
-router.get(
-  "/admin/solutions/cards",
-  protectedRoute,
-  getAdminSolutionsCards
-);
 
-router.get(
-  "/admin/solutions/cards/:id",
-  protectedRoute,
-  getSolutionsCardById
-);
+  router.put(
+    "/admin/solutions/cards/:id",
+    protectedRoute,
+    upload.single("image"),
+    updateSolutionsCard
+  );
 
-router.post(
-  "/admin/solutions/cards",
-  protectedRoute,
-  upload.single("image"),
-  createSolutionsCard
-);
+  router.delete(
+    "/admin/solutions/cards/:id",
+    protectedRoute,
+    deleteSolutionsCard
+  );
 
-router.put(
-  "/admin/solutions/cards/:id",
-  protectedRoute,
-  upload.single("image"),
-  updateSolutionsCard
-);
+  router.patch(
+    "/admin/solutions/cards/:id/status",
+    protectedRoute,
+    toggleSolutionsCardStatus
+  );
 
-router.delete(
-  "/admin/solutions/cards/:id",
-  protectedRoute,
-  deleteSolutionsCard
-);
+  // =====================================================
+  // Our Solutions Header — Public Route
+  // =====================================================
+  router.get("/solutions/our-header", getOurSolutionsHeader);
 
-router.patch(
-  "/admin/solutions/cards/:id/status",
-  protectedRoute,
-  toggleSolutionsCardStatus
-);
+  // =====================================================
+  // Our Solutions Header — Admin Routes
+  // =====================================================
+  router.post(
+    "/admin/solutions/our-header",
+    protectedRoute,
+    createOurSolutionsHeader
+  );
 
-// =====================================================
-// Our Solutions Header — Public Route
-// =====================================================
-router.get("/solutions/our-header", getOurSolutionsHeader);
+  router.get(
+    "/admin/solutions/our-header",
+    protectedRoute,
+    getAllOurSolutionsHeaders
+  );
 
-// =====================================================
-// Our Solutions Header — Admin Routes
-// =====================================================
-router.post(
-  "/admin/solutions/our-header",
-  protectedRoute,
-  createOurSolutionsHeader
-);
+  router.get(
+    "/admin/solutions/our-header/:id",
+    protectedRoute,
+    getOurSolutionsHeaderById
+  );
 
-router.get(
-  "/admin/solutions/our-header",
-  protectedRoute,
-  getAllOurSolutionsHeaders
-);
+  router.put(
+    "/admin/solutions/our-header/:id",
+    protectedRoute,
+    updateOurSolutionsHeader
+  );
 
-router.get(
-  "/admin/solutions/our-header/:id",
-  protectedRoute,
-  getOurSolutionsHeaderById
-);
+  router.delete(
+    "/admin/solutions/our-header/:id",
+    protectedRoute,
+    deleteOurSolutionsHeader
+  );
 
-router.put(
-  "/admin/solutions/our-header/:id",
-  protectedRoute,
-  updateOurSolutionsHeader
-);
+  router.patch(
+    "/admin/solutions/our-header/:id/status",
+    protectedRoute,
+    toggleOurSolutionsHeaderStatus
+  );
 
-router.delete(
-  "/admin/solutions/our-header/:id",
-  protectedRoute,
-  deleteOurSolutionsHeader
-);
+  // =====================================================
+  // Our Solutions Cards — Public Route
+  // =====================================================
+  router.get("/solutions/our-cards", getOurSolutionsCards);
 
-router.patch(
-  "/admin/solutions/our-header/:id/status",
-  protectedRoute,
-  toggleOurSolutionsHeaderStatus
-);
+  // =====================================================
+  // Our Solutions Cards — Admin Routes
+  // =====================================================
+  router.post(
+    "/admin/solutions/our-cards",
+    protectedRoute,
+    createOurSolutionsCard
+  );
 
-// =====================================================
-// Our Solutions Cards — Public Route
-// =====================================================
-router.get("/solutions/our-cards", getOurSolutionsCards);
+  router.get(
+    "/admin/solutions/our-cards",
+    protectedRoute,
+    getAllOurSolutionsCards
+  );
 
-// =====================================================
-// Our Solutions Cards — Admin Routes
-// =====================================================
-router.post(
-  "/admin/solutions/our-cards",
-  protectedRoute,
-  createOurSolutionsCard
-);
+  router.get(
+    "/admin/solutions/our-cards/:id",
+    protectedRoute,
+    getOurSolutionsCardById
+  );
 
-router.get(
-  "/admin/solutions/our-cards",
-  protectedRoute,
-  getAllOurSolutionsCards
-);
+  router.put(
+    "/admin/solutions/our-cards/:id",
+    protectedRoute,
+    updateOurSolutionsCard
+  );
 
-router.get(
-  "/admin/solutions/our-cards/:id",
-  protectedRoute,
-  getOurSolutionsCardById
-);
+  router.delete(
+    "/admin/solutions/our-cards/:id",
+    protectedRoute,
+    deleteOurSolutionsCard
+  );
 
-router.put(
-  "/admin/solutions/our-cards/:id",
-  protectedRoute,
-  updateOurSolutionsCard
-);
+  router.patch(
+    "/admin/solutions/our-cards/:id/status",
+    protectedRoute,
+    toggleOurSolutionsCardStatus
+  );
 
-router.delete(
-  "/admin/solutions/our-cards/:id",
-  protectedRoute,
-  deleteOurSolutionsCard
-);
+  // =====================================================
+  // How It Works Header — Public Route
+  // =====================================================
+  router.get("/how-it-works/header", getHowItWorksHeader);
 
-router.patch(
-  "/admin/solutions/our-cards/:id/status",
-  protectedRoute,
-  toggleOurSolutionsCardStatus
-);
+  // =====================================================
+  // How It Works Header — Admin Routes
+  // =====================================================
+  router.post(
+    "/admin/how-it-works/header",
+    protectedRoute,
+    createHowItWorksHeader
+  );
 
-// =====================================================
-// How It Works Header — Public Route
-// =====================================================
-router.get("/how-it-works/header", getHowItWorksHeader);
+  router.get(
+    "/admin/how-it-works/header",
+    protectedRoute,
+    getAdminHowItWorksHeaders
+  );
 
-// =====================================================
-// How It Works Header — Admin Routes
-// =====================================================
-router.post(
-  "/admin/how-it-works/header",
-  protectedRoute,
-  createHowItWorksHeader
-);
+  router.put(
+    "/admin/how-it-works/header/:id",
+    protectedRoute,
+    updateHowItWorksHeader
+  );
 
-router.get(
-  "/admin/how-it-works/header",
-  protectedRoute,
-  getAdminHowItWorksHeaders
-);
+  router.delete(
+    "/admin/how-it-works/header/:id",
+    protectedRoute,
+    deleteHowItWorksHeader
+  );
 
-router.put(
-  "/admin/how-it-works/header/:id",
-  protectedRoute,
-  updateHowItWorksHeader
-);
+  // =====================================================
+  // How It Works Process — Public Route
+  // =====================================================
+  router.get("/how-it-works/process", getHowItWorksProcesses);
 
-router.delete(
-  "/admin/how-it-works/header/:id",
-  protectedRoute,
-  deleteHowItWorksHeader
-);
+  // =====================================================
+  // How It Works Process — Admin Routes
+  // =====================================================
+  router.post(
+    "/admin/how-it-works/process",
+    protectedRoute,
+    createHowItWorksProcess
+  );
 
-// =====================================================
-// How It Works Process — Public Route
-// =====================================================
-router.get("/how-it-works/process", getHowItWorksProcesses);
+  router.get(
+    "/admin/how-it-works/process",
+    protectedRoute,
+    getAdminHowItWorksProcesses
+  );
 
-// =====================================================
-// How It Works Process — Admin Routes
-// =====================================================
-router.post(
-  "/admin/how-it-works/process",
-  protectedRoute,
-  createHowItWorksProcess
-);
+  router.get(
+    "/admin/how-it-works/process/:id",
+    protectedRoute,
+    getHowItWorksProcessById
+  );
 
-router.get(
-  "/admin/how-it-works/process",
-  protectedRoute,
-  getAdminHowItWorksProcesses
-);
+  router.put(
+    "/admin/how-it-works/process/:id",
+    protectedRoute,
+    updateHowItWorksProcess
+  );
 
-router.get(
-  "/admin/how-it-works/process/:id",
-  protectedRoute,
-  getHowItWorksProcessById
-);
+  router.delete(
+    "/admin/how-it-works/process/:id",
+    protectedRoute,
+    deleteHowItWorksProcess
+  );
 
-router.put(
-  "/admin/how-it-works/process/:id",
-  protectedRoute,
-  updateHowItWorksProcess
-);
+  // =====================================================
+  // Final CTA — Public Route
+  // =====================================================
+  router.get("/final-cta", getPublicFinalCta);
 
-router.delete(
-  "/admin/how-it-works/process/:id",
-  protectedRoute,
-  deleteHowItWorksProcess
-);
+  // =====================================================
+  // Final CTA — Admin Routes
+  // =====================================================
+  router.post(
+    "/admin/final-cta",
+    protectedRoute,
+    upload.single("backgroundImage"),
+    createFinalCta
+  );
 
-// =====================================================
-// Final CTA — Public Route
-// =====================================================
-router.get("/final-cta", getPublicFinalCta);
+  router.get(
+    "/admin/final-cta",
+    protectedRoute,
+    getAllFinalCtas
+  );
 
-// =====================================================
-// Final CTA — Admin Routes
-// =====================================================
-router.post(
-  "/admin/final-cta",
-  protectedRoute,
-  upload.single("backgroundImage"),
-  createFinalCta
-);
+  router.get(
+    "/admin/final-cta/:id",
+    protectedRoute,
+    getFinalCtaById
+  );
 
-router.get(
-  "/admin/final-cta",
-  protectedRoute,
-  getAllFinalCtas
-);
+  router.put(
+    "/admin/final-cta/:id",
+    protectedRoute,
+    upload.single("backgroundImage"),
+    updateFinalCta
+  );
 
-router.get(
-  "/admin/final-cta/:id",
-  protectedRoute,
-  getFinalCtaById
-);
+  router.delete(
+    "/admin/final-cta/:id",
+    protectedRoute,
+    deleteFinalCta
+  );
 
-router.put(
-  "/admin/final-cta/:id",
-  protectedRoute,
-  upload.single("backgroundImage"),
-  updateFinalCta
-);
-
-router.delete(
-  "/admin/final-cta/:id",
-  protectedRoute,
-  deleteFinalCta
-);
-
-module.exports = router;
+  module.exports = router;

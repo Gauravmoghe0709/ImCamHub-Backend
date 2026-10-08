@@ -54,27 +54,7 @@ const validatePayload = (payload, requireAll = false) => {
  * GET /faq
  * Returns the FAQ section, active FAQs sorted by displayOrder ASC, and CTA.
  */
-async function getPublicFaq(req, res) {
-  try {
-    const [section, faqs, cta] = await Promise.all([
-      FaqSection.findOne().sort({ createdAt: 1 }),
-      Faq.find({ isActive: true }).sort({ displayOrder: 1 }),
-      FaqCta.findOne().sort({ createdAt: 1 }),
-    ]);
 
-    return res.status(200).json({
-      success: true,
-      data: {
-        section: section || null,
-        faqs,
-        cta: cta || null,
-      },
-    });
-  } catch (error) {
-    console.error("Get Public FAQ Error:", error);
-    return res.status(500).json({ success: false, message: "Something went wrong" });
-  }
-}
 
 // ---------------------------------------------------------------------------
 // Admin controllers
@@ -208,8 +188,33 @@ async function deleteFaqSection(req, res) {
   }
 }
 
+/**
+ * GET /faq/section
+ * Returns ONLY the FAQ section data (public API).
+ */
+async function publicGetFaqSection(req, res) {
+  try {
+    const section = await FaqSection.findOne().sort({ createdAt: 1 });
+
+    if (!section) {
+      return res.status(404).json({
+        success: false,
+        message: "FAQ section not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: section,
+    });
+  } catch (error) {
+    console.error("Get Public FAQ Section Error:", error);
+    return res.status(500).json({ success: false, message: "Something went wrong" });
+  }
+}
+
 module.exports = {
-  getPublicFaq,
+  publicGetFaqSection,
   adminGetFaqSection,
   createFaqSection,
   updateFaqSection,

@@ -224,10 +224,29 @@ async function deleteFaq(req, res) {
   }
 }
 
+/**
+ * GET /faq/items
+ * Returns ONLY the active FAQ items sorted by displayOrder (public API).
+ */
+async function publicGetFaqItems(req, res) {
+  try {
+    const faqs = await Faq.find({ isActive: true }).sort({ displayOrder: 1 });
+
+    return res.status(200).json({
+      success: true,
+      data: faqs,
+    });
+  } catch (error) {
+    console.error("Get Public FAQ Items Error:", error);
+    return res.status(500).json({ success: false, message: "Something went wrong" });
+  }
+}
+
 module.exports = {
   adminGetAllFaqs,
   adminGetFaqById,
   createFaq,
   updateFaq,
   deleteFaq,
+  publicGetFaqItems,
 };

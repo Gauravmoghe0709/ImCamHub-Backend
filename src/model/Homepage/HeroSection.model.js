@@ -12,7 +12,12 @@ const dashboardSectionSchema = new mongoose.Schema(
     },
     dashboardImage: {
       type: String,
-      required: true,
+      default: null,
+      trim: true,
+    },
+    heroVideo: {
+      type: String,
+      default: null,
       trim: true,
     },
     primaryButtonText: {

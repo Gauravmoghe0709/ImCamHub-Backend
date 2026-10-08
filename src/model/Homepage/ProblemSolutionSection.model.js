@@ -4,7 +4,6 @@ const problemSolutionSectionSchema = new mongoose.Schema(
   {
     badgeText: {
       type: String,
-      required: true,
       trim: true,
     },
     title: {

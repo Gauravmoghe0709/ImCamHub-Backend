@@ -1,7 +1,10 @@
 const express = require("express");
+
 const protectedRoute = require("../middlewares/Authmiddleware");
 const upload = require("../middlewares/Upload");
+
 const router = express.Router();
+
 const {
   createBookDemoPage,
   getBookDemoPageAdmin,
@@ -9,6 +12,7 @@ const {
   deleteBookDemoPage,
   getPublicBookDemoPage,
 } = require("../controllers/BookDemoPage controllers/BookDemoPage.controller");
+
 const {
   createBookDemoForm,
   getAllBookDemosForm,
@@ -16,6 +20,7 @@ const {
   updateBookDemoFormStatus,
   deleteBookDemoForm,
 } = require("../controllers/BookDemoPage controllers/BookDemoForm.controller");
+
 const {
   createWhatToExpect,
   getWhatToExpectAdmin,
@@ -23,6 +28,7 @@ const {
   deleteWhatToExpect,
   getPublicWhatToExpect,
 } = require("../controllers/BookDemoPage controllers/WhatToExpect.controller");
+
 const {
   createWhatHappensNext,
   getWhatHappensNextAdmin,
@@ -30,6 +36,7 @@ const {
   deleteWhatHappensNext,
   getPublicWhatHappensNext,
 } = require("../controllers/BookDemoPage controllers/WhatHappensNext.controller");
+
 const {
   createTestimonial,
   getTestimonialAdmin,
@@ -39,59 +46,192 @@ const {
 } = require("../controllers/BookDemoPage controllers/BookDemoTestimonial.controller");
 
 // =====================================================
-// Public Book Demo Page API
+// Book Demo Page — Public Route
 // =====================================================
+
 router.get("/book-demo-page", getPublicBookDemoPage);
 
 // =====================================================
-// Admin Book Demo Page APIs
+// Book Demo Page — Admin Routes
 // =====================================================
 
-router.post("/admin/book-demo-page", protectedRoute, createBookDemoPage);
-router.get("/admin/book-demo-page", protectedRoute, getBookDemoPageAdmin);
-router.put("/admin/book-demo-page/:id", protectedRoute, updateBookDemoPage);
-router.delete("/admin/book-demo-page/:id", protectedRoute, deleteBookDemoPage);
+router.post(
+  "/admin/book-demo-page",
+  protectedRoute,
+  createBookDemoPage
+);
+
+router.get(
+  "/admin/book-demo-page",
+  protectedRoute,
+  getBookDemoPageAdmin
+);
+
+router.put(
+  "/admin/book-demo-page/:id",
+  protectedRoute,
+  updateBookDemoPage
+);
+
+router.delete(
+  "/admin/book-demo-page/:id",
+  protectedRoute,
+  deleteBookDemoPage
+);
 
 // =====================================================
-// Book Demo Form APIs
-// PUBLIC API
-// =====================================================
-router.post("/public/book-demo", createBookDemoForm);
-
-// ==========================================
-// ADMIN APIs
-// ==========================================
-router.get("/admin/book-demo", protectedRoute, getAllBookDemosForm);
-router.get("/admin/book-demo/:id", protectedRoute, getBookDemoFormById);
-router.patch("/admin/book-demo/:id/status", protectedRoute, updateBookDemoFormStatus);
-router.delete("/admin/book-demo/:id", protectedRoute, deleteBookDemoForm);
-
-// =====================================================
-// Book Demo Page Sections — What to Expect
-// =====================================================
-router.get("/book-demo/what-to-expect", getPublicWhatToExpect);
-router.post("/admin/book-demo/what-to-expect", protectedRoute, upload.single("image"), createWhatToExpect);
-router.get("/admin/book-demo/what-to-expect", protectedRoute, getWhatToExpectAdmin);
-router.put("/admin/book-demo/what-to-expect/:id", protectedRoute, upload.single("image"), updateWhatToExpect);
-router.delete("/admin/book-demo/what-to-expect/:id", protectedRoute, deleteWhatToExpect);
-
-// =====================================================
-// Book Demo Page Sections — What Happens Next
-// =====================================================
-router.get("/book-demo/what-happens-next", getPublicWhatHappensNext);
-router.post("/admin/book-demo/what-happens-next", protectedRoute, createWhatHappensNext);
-router.get("/admin/book-demo/what-happens-next", protectedRoute, getWhatHappensNextAdmin);
-router.put("/admin/book-demo/what-happens-next/:id", protectedRoute, updateWhatHappensNext);
-router.delete("/admin/book-demo/what-happens-next/:id", protectedRoute, deleteWhatHappensNext);
-
-// =====================================================
-// Book Demo Page Sections — Testimonial
+// Book Demo Form — Public Route
 // =====================================================
 
-router.get("/book-demo/testimonial", getPublicTestimonial);
-router.post("/admin/book-demo/testimonial", protectedRoute, createTestimonial);
-router.get("/admin/book-demo/testimonial", protectedRoute, getTestimonialAdmin);
-router.put("/admin/book-demo/testimonial/:id", protectedRoute, updateTestimonial);
-router.delete("/admin/book-demo/testimonial/:id", protectedRoute, deleteTestimonial);
+router.post(
+  "/public/book-demo",
+  createBookDemoForm
+);
+
+// =====================================================
+// Book Demo — What to Expect — Public Route
+// =====================================================
+
+router.get(
+  "/book-demo/what-to-expect",
+  getPublicWhatToExpect
+);
+
+// =====================================================
+// Book Demo — What to Expect — Admin Routes
+// =====================================================
+
+router.post(
+  "/admin/book-demo/what-to-expect",
+  protectedRoute,
+  upload.single("image"),
+  createWhatToExpect
+);
+
+router.get(
+  "/admin/book-demo/what-to-expect",
+  protectedRoute,
+  getWhatToExpectAdmin
+);
+
+router.put(
+  "/admin/book-demo/what-to-expect/:id",
+  protectedRoute,
+  upload.single("image"),
+  updateWhatToExpect
+);
+
+router.delete(
+  "/admin/book-demo/what-to-expect/:id",
+  protectedRoute,
+  deleteWhatToExpect
+);
+
+// =====================================================
+// Book Demo — What Happens Next — Public Route
+// =====================================================
+
+router.get(
+  "/book-demo/what-happens-next",
+  getPublicWhatHappensNext
+);
+
+// =====================================================
+// Book Demo — What Happens Next — Admin Routes
+// =====================================================
+
+router.post(
+  "/admin/book-demo/what-happens-next",
+  protectedRoute,
+  createWhatHappensNext
+);
+
+router.get(
+  "/admin/book-demo/what-happens-next",
+  protectedRoute,
+  getWhatHappensNextAdmin
+);
+
+router.put(
+  "/admin/book-demo/what-happens-next/:id",
+  protectedRoute,
+  updateWhatHappensNext
+);
+
+router.delete(
+  "/admin/book-demo/what-happens-next/:id",
+  protectedRoute,
+  deleteWhatHappensNext
+);
+
+// =====================================================
+// Book Demo — Testimonial — Public Route
+// =====================================================
+
+router.get(
+  "/book-demo/testimonial",
+  getPublicTestimonial
+);
+
+// =====================================================
+// Book Demo — Testimonial — Admin Routes
+// =====================================================
+
+router.post(
+  "/admin/book-demo/testimonial",
+  protectedRoute,
+  createTestimonial
+);
+
+router.get(
+  "/admin/book-demo/testimonial",
+  protectedRoute,
+  getTestimonialAdmin
+);
+
+router.put(
+  "/admin/book-demo/testimonial/:id",
+  protectedRoute,
+  updateTestimonial
+);
+
+router.delete(
+  "/admin/book-demo/testimonial/:id",
+  protectedRoute,
+  deleteTestimonial
+);
+
+// =====================================================
+// Book Demo Form — Admin Routes
+// =====================================================
+
+// GET all enquiries
+router.get(
+  "/admin/book-demo",
+  protectedRoute,
+  getAllBookDemosForm
+);
+
+// GET enquiry by ID
+// Keep this route AFTER all specific /admin/book-demo/... routes
+router.get(
+  "/admin/book-demo/:id",
+  protectedRoute,
+  getBookDemoFormById
+);
+
+// UPDATE enquiry status
+router.patch(
+  "/admin/book-demo/:id/status",
+  protectedRoute,
+  updateBookDemoFormStatus
+);
+
+// DELETE enquiry
+router.delete(
+  "/admin/book-demo/:id",
+  protectedRoute,
+  deleteBookDemoForm
+);
 
 module.exports = router;

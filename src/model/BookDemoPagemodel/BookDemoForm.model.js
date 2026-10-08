@@ -26,13 +26,14 @@ const bookDemoFormSchema = new mongoose.Schema(
     firmSize: {
       type: String,
       required: [true, "Firm size is required"],
+      trim: true,
       enum: {
         values: [
-          "1-10 employees",
-          "11-50 employees",
-          "51-200 employees",
-          "201-1000 employees",
-          "1000+ employees",
+          "1 - 10 employees",
+          "11 - 50 employees",
+          "51 - 200 employees",
+          "201 - 1,000 employees",
+          "1,000+ employees",
         ],
         message: "Please select a valid firm size",
       },

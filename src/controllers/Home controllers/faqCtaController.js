@@ -9,6 +9,38 @@ const FaqCta = require("../../model/Homepage/faqCta");
 const isValidEmail = (value) =>
   typeof value === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 
+/**
+ * Normalizes a CTA link to a relative path.
+ * - If it's already a relative path (starts with /), return as-is
+ * - If it's a full URL, extract the path portion
+ * - Otherwise, prepend / to make it relative
+ */
+const normalizeCtaLink = (link) => {
+  if (!link || typeof link !== "string") return "/";
+  
+  const trimmed = link.trim();
+  
+  // Already a relative path
+  if (trimmed.startsWith("/")) {
+    // Normalize multiple slashes
+    return trimmed.replace(/\/+/g, "/");
+  }
+  
+  // Check if it's a full URL
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    try {
+      const url = new URL(trimmed);
+      return url.pathname || "/";
+    } catch {
+      // If URL parsing fails, treat as path and prepend /
+      return "/" + trimmed;
+    }
+  }
+  
+  // Otherwise, prepend / to make it relative
+  return "/" + trimmed;
+};
+
 const getErrorResponse = (error) => {
   if (error.name === "ValidationError" || error.name === "CastError") {
     return { status: 400, message: "Invalid FAQ CTA data" };
@@ -109,7 +141,7 @@ async function createFaqCta(req, res) {
       email: req.body.email.trim().toLowerCase(),
       phone: req.body.phone.trim(),
       ctaText: req.body.ctaText.trim(),
-      ctaLink: req.body.ctaLink.trim(),
+      ctaLink: normalizeCtaLink(req.body.ctaLink),
     });
 
     return res.status(201).json({
@@ -140,7 +172,7 @@ async function updateFaqCta(req, res) {
     }
 
     const updatePayload = {};
-    const textFields = ["title", "description", "phone", "ctaText", "ctaLink"];
+    const textFields = ["title", "description", "phone", "ctaText"];
     for (const field of textFields) {
       if (req.body[field] !== undefined) {
         updatePayload[field] = req.body[field].trim();
@@ -148,6 +180,9 @@ async function updateFaqCta(req, res) {
     }
     if (req.body.email !== undefined) {
       updatePayload.email = req.body.email.trim().toLowerCase();
+    }
+    if (req.body.ctaLink !== undefined) {
+      updatePayload.ctaLink = normalizeCtaLink(req.body.ctaLink);
     }
 
     const cta = await FaqCta.findByIdAndUpdate(req.params.id, updatePayload, {
@@ -197,9 +232,35 @@ async function deleteFaqCta(req, res) {
   }
 }
 
+/**
+ * GET /faq/cta
+ * Returns ONLY the FAQ CTA data (public API).
+ */
+async function publicGetFaqCta(req, res) {
+  try {
+    const cta = await FaqCta.findOne().sort({ createdAt: 1 });
+
+    if (!cta) {
+      return res.status(404).json({
+        success: false,
+        message: "FAQ CTA not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: cta,
+    });
+  } catch (error) {
+    console.error("Get Public FAQ CTA Error:", error);
+    return res.status(500).json({ success: false, message: "Something went wrong" });
+  }
+}
+
 module.exports = {
   adminGetFaqCta,
   createFaqCta,
   updateFaqCta,
   deleteFaqCta,
+  publicGetFaqCta,
 };

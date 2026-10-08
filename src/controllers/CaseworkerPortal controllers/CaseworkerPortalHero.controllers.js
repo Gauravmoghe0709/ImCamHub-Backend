@@ -140,13 +140,6 @@ async function getCaseworkerPortalHeroById(req, res) {
     });
   }
 }
-
-/**
- * POST /api/admin/dashboard/hero
- * Creates a new Admin Dashboard Hero record.
- * Accepts multipart/form-data — dashboardImage handled by existing Multer middleware.
- * dashboardImage (the file) is required on creation.
- */
 async function createCaseworkerPortalHero(req, res) {
   try {
     // Image is required on create

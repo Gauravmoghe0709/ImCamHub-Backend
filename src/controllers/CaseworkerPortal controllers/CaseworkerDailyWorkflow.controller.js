@@ -110,10 +110,6 @@ async function getPublicCaseworkerDailyWorkflow(req, res) {
 // Admin controllers
 // ---------------------------------------------------------------------------
 
-/**
- * GET /admin/caseworker-portal/day-in-the-life
- * Returns all records (active + inactive).
- */
 async function getAllCaseworkerDailyWorkflow(req, res) {
   try {
     const records = await CaseworkerDailyWorkflow.find().sort({
@@ -133,50 +129,6 @@ async function getAllCaseworkerDailyWorkflow(req, res) {
     });
   }
 }
-
-/**
- * GET /admin/caseworker-portal/day-in-the-life/:id
- * Returns a single record by ID.
- */
-async function getCaseworkerDailyWorkflowById(req, res) {
-  try {
-    const { id } = req.params;
-
-    if (!isValidObjectId(id)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Caseworker Daily Workflow id",
-      });
-    }
-
-    const record = await CaseworkerDailyWorkflow.findById(id);
-
-    if (!record) {
-      return res.status(404).json({
-        success: false,
-        message: "Caseworker Daily Workflow record not found",
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: "Caseworker Daily Workflow record fetched successfully",
-      data: record,
-    });
-  } catch (error) {
-    console.error("Get Caseworker Daily Workflow By Id Error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong",
-    });
-  }
-}
-
-/**
- * POST /admin/caseworker-portal/day-in-the-life
- * Creates a new Caseworker Daily Workflow record.
- * Accepts multipart/form-data — section_image handled by existing Multer middleware.
- */
 async function createCaseworkerDailyWorkflow(req, res) {
   try {
     // Image is required on create
@@ -449,7 +401,6 @@ async function toggleCaseworkerDailyWorkflowStatus(req, res) {
 module.exports = {
   getPublicCaseworkerDailyWorkflow,
   getAllCaseworkerDailyWorkflow,
-  getCaseworkerDailyWorkflowById,
   createCaseworkerDailyWorkflow,
   updateCaseworkerDailyWorkflow,
   deleteCaseworkerDailyWorkflow,

@@ -8,30 +8,20 @@ const {
   deletePricingPage,
   getPublicPricingPage,
 } = require("../controllers/PricingPage controllers/PricingPage.controller");
-const {
-  createPlan,
-  getPlans,
-  getPlanById,
-  updatePlan,
-  deletePlan,
-  getPublicPlans,
-} = require("../controllers/PricingPage controllers/Plan");
-const {
-  createFeatureCategory,
-  getFeatureCategories,
-  getFeatureCategoryById,
-  updateFeatureCategory,
-  deleteFeatureCategory,
-  getPublicFeatureCategories,
-} = require("../controllers/PricingPage controllers/Features");
-const {
-  createCTA,
-  getCTAs,
-  getCTAById,
-  updateCTA,
-  deleteCTA,
-  getPublicCTA,
-} = require("../controllers/PricingPage controllers/CTA");
+ const {
+  createPricingCard,
+  getAllPricingCards,
+  getPricingCardById,
+  updatePricingCard,
+  deletePricingCard,
+  getPublicPricingCards,
+  getPublicPricingCardById,
+  addCategory,
+  updateCategory,
+  deleteCategory,
+  addFeature,
+  removeFeature,
+} = require("../controllers/PricingPage controllers/PricingCard.controller");
 const {
   createPricingPageHeader,
   getPricingPageHeader,
@@ -87,41 +77,32 @@ router.put(
 router.delete("/admin/pricing-page/:id", protectedRoute, deletePricingPage);
 
 // =====================================================
-// PUBLIC PRICING PAGE ROUTES
+// Public Pricing Cards API
 // =====================================================
-router.get("/pricing/plans", getPublicPlans);
-router.get("/pricing/features", getPublicFeatureCategories);
-router.get("/pricing/cta", getPublicCTA);
+router.get("/public/pricing", getPublicPricingCards);
+router.get("/public/pricing/:id", getPublicPricingCardById);
 
 // =====================================================
-// ADMIN PRICING PLANS ROUTES
+// Admin Pricing Cards APIs
 // =====================================================
-router.post("/admin/pricing/plans", protectedRoute, createPlan);
-
-router.get("/admin/pricing/plans", protectedRoute, getPlans);
-router.get("/admin/pricing/plans/:id", protectedRoute, getPlanById);
-router.put("/admin/pricing/plans/:id", protectedRoute, updatePlan);
-router.delete("/admin/pricing/plans/:id", protectedRoute, deletePlan);
-
-// =====================================================
-// ADMIN PRICING FEATURES ROUTES
-// =====================================================
-
-router.post("/admin/pricing/features", protectedRoute, createFeatureCategory);
-
-router.get("/admin/pricing/features", protectedRoute, getFeatureCategories);
-router.get("/admin/pricing/features/:id", protectedRoute, getFeatureCategoryById);
-router.put("/admin/pricing/features/:id", protectedRoute, updateFeatureCategory);
-router.delete("/admin/pricing/features/:id", protectedRoute, deleteFeatureCategory);
+router.post("/admin/pricing", protectedRoute, createPricingCard);
+router.get("/admin/pricing", protectedRoute, getAllPricingCards);
+router.get("/admin/pricing/:id", protectedRoute, getPricingCardById);
+router.put("/admin/pricing/:id", protectedRoute, updatePricingCard);
+router.delete("/admin/pricing/:id", protectedRoute, deletePricingCard);
 
 // =====================================================
-// ADMIN PRICING CTA ROUTES
+// Admin Pricing Card Categories APIs
 // =====================================================
-router.post("/admin/pricing/cta", protectedRoute, createCTA);
-router.get("/admin/pricing/cta", protectedRoute, getCTAs);
-router.get("/admin/pricing/cta/:id", protectedRoute, getCTAById);
-router.put("/admin/pricing/cta/:id", protectedRoute, updateCTA);
-router.delete("/admin/pricing/cta/:id", protectedRoute, deleteCTA);
+router.post("/admin/pricing/:id/categories", protectedRoute, addCategory);
+router.put("/admin/pricing/:id/categories/:categoryId", protectedRoute, updateCategory);
+router.delete("/admin/pricing/:id/categories/:categoryId", protectedRoute, deleteCategory);
+
+// =====================================================
+// Admin Pricing Card Category Features APIs
+// =====================================================
+router.post("/admin/pricing/:id/categories/:categoryId/features", protectedRoute, addFeature);
+router.delete("/admin/pricing/:id/categories/:categoryId/features/:featureIndex", protectedRoute, removeFeature);
 
 // =====================================================
 // Public FAQ Header API
@@ -172,6 +153,7 @@ router.put(
 );
 router.delete("/admin/pricing-page/faqs/:id", protectedRoute, deletePricingPageFaq);
 
+
 // =====================================================
 // Final CTA — Public Route
 // =====================================================
@@ -181,33 +163,33 @@ router.get("/final-cta", getPublicFinalCta);
 // Final CTA — Admin Routes
 // =====================================================
 router.post(
-  "/admin/final-cta",
+  "/admin/pricing-page/cta",
   protectedRoute,
   upload.single("backgroundImage"),
   createFinalCta
 );
 
 router.get(
-  "/admin/final-cta",
+  "/admin/pricing-page/cta",
   protectedRoute,
   getAllFinalCtas
 );
 
 router.get(
-  "/admin/final-cta/:id",
+  "/admin/pricing-page/cta/:id",
   protectedRoute,
   getFinalCtaById
 );
 
 router.put(
-  "/admin/final-cta/:id",
+  "/admin/pricing-page/cta/:id",
   protectedRoute,
   upload.single("backgroundImage"),
   updateFinalCta
 );
 
 router.delete(
-  "/admin/final-cta/:id",
+  "/admin/pricing-page/cta/:id",
   protectedRoute,
   deleteFinalCta
 );

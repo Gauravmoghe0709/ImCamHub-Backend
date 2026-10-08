@@ -14,7 +14,7 @@ const problemSolutionComparisonSchema = new mongoose.Schema(
     },
     displayOrder: {
       type: Number,
-      default: 0,
+      required: true,
     },
     isActive: {
       type: Boolean,

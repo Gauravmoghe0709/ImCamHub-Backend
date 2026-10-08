@@ -1,6 +1,8 @@
 const express = require("express");
 const upload = require("../middlewares/Upload");
+const heroSectionUpload = require("../middlewares/HeroSectionUpload");
 const protectedRoute = require("../middlewares/Authmiddleware");
+const router = express.Router();
 const {
   createheroSection,
   getAllheroSections,
@@ -91,7 +93,7 @@ const {
   deleteWhyImcamHubCard,
 } = require("../controllers/Home controllers/whyImcamHubCardController");
 const {
-  getPublicFaq,
+  publicGetFaqSection,
   adminGetFaqSection,
   createFaqSection,
   updateFaqSection,
@@ -103,12 +105,14 @@ const {
   createFaq,
   updateFaq,
   deleteFaq,
+  publicGetFaqItems,
 } = require("../controllers/Home controllers/faqController");
 const {
   adminGetFaqCta,
   createFaqCta,
   updateFaqCta,
   deleteFaqCta,
+  publicGetFaqCta,
 } = require("../controllers/Home controllers/faqCtaController");
 const {
   getPublicDemoCta,
@@ -118,15 +122,18 @@ const {
   deleteDemoCtaSection,
 } = require("../controllers/Home controllers/demoCtaSectionController");
 
-const router = express.Router();
-
+// Public routes for hero section management
 router.get("/public/home/herosection", getActiveheroSection);
 
 // Admin routes for hero section management
+
 router.post(
   "/admin/home/herosection",
   protectedRoute,
-  upload.single("dashboardImage"),
+  heroSectionUpload.fields([
+    { name: "dashboardImage", maxCount: 1 },
+    { name: "heroVideo", maxCount: 1 },
+  ]),
   createheroSection
 );
 router.get("/admin/home/herosection", protectedRoute, getAllheroSections);
@@ -134,7 +141,10 @@ router.get("/admin/home/herosection/:id", protectedRoute, getheroSectionById);
 router.put(
   "/admin/home/herosection/:id",
   protectedRoute,
-  upload.single("dashboardImage"),
+  heroSectionUpload.fields([
+    { name: "dashboardImage", maxCount: 1 },
+    { name: "heroVideo", maxCount: 1 },
+  ]),
   updateheroSection
 );
 router.delete("/admin/home/herosection/:id", protectedRoute, deleteheroSection);
@@ -143,25 +153,25 @@ router.patch("/admin/home/herosection/:id/status", protectedRoute, toggleheroSec
 // =====================================================
 // Homepage Platform Section APIs
 // =====================================================
-router.get("/api/public/home/platform-section", getPublicPlatformSection);
+router.get("/public/home/platform-section", getPublicPlatformSection);
 
 router.post(
-  "/api/admin/home/platform-section",
+  "/admin/home/platform-section",
   protectedRoute,
   upload.single("dashboardImage"),
   createPlatformSection
 );
-router.get("/api/admin/home/platform-section", protectedRoute, getPlatformSections);
-router.get("/api/admin/home/platform-section/:id", protectedRoute, getPlatformSectionById);
+router.get("/admin/home/platform-section", protectedRoute, getPlatformSections);
+router.get("/admin/home/platform-section/:id", protectedRoute, getPlatformSectionById);
 router.put(
-  "/api/admin/home/platform-section/:id",
+  "/admin/home/platform-section/:id",
   protectedRoute,
   upload.single("dashboardImage"),
   updatePlatformSection
 );
-router.delete("/api/admin/home/platform-section/:id", protectedRoute, deletePlatformSection);
+router.delete("/admin/home/platform-section/:id", protectedRoute, deletePlatformSection);
 router.patch(
-  "/api/admin/home/platform-section/:id/status",
+  "/admin/home/platform-section/:id/status",
   protectedRoute,
   updatePlatformSectionStatus
 );
@@ -344,7 +354,11 @@ router.delete("/admin/why-imcam-hub/cards/:id", protectedRoute, deleteWhyImcamHu
 // =====================================================
 
 // Public route — combined section + active FAQs + CTA
-router.get("/faq", getPublicFaq);
+
+// Public routes — separate FAQ endpoints
+router.get("/faq/section", publicGetFaqSection);
+router.get("/faq/items", publicGetFaqItems);
+router.get("/faq/cta", publicGetFaqCta);
 
 // Admin routes — section
 router.get("/admin/faq", protectedRoute, adminGetFaqSection);
