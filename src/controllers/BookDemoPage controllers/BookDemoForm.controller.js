@@ -1,4 +1,6 @@
 const { isValidObjectId } = require("mongoose");
+const fs = require("fs");
+const path = require("path");
 const BookDemoForm = require("../../model/BookDemoPagemodel/BookDemoForm.model");
 const sendEmail = require("../../../mailer");
 
@@ -40,6 +42,55 @@ const escapeHtml = (value = "") =>
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+
+// Helper function to extract first name from full name
+const getFirstName = (fullName = "") => {
+  const name = String(fullName).trim();
+  const parts = name.split(/\s+/);
+  return parts.length > 0 ? parts[0] : "";
+};
+
+// Helper function to load and populate the confirmation email template
+const generateConfirmationEmail = (enquiry) => {
+  try {
+    const templatePath = path.join(__dirname, "../../templates/BookDemoConfirmation.html");
+    let htmlTemplate = fs.readFileSync(templatePath, "utf8");
+
+    // Extract first name from full name
+    const firstName = getFirstName(enquiry.fullName);
+
+    // Format date and time
+    const dateStr = enquiry.preferredDate
+      ? new Date(enquiry.preferredDate).toLocaleDateString("en-GB", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      : "To be confirmed by our team";
+
+    const timeStr = enquiry.preferredTime ? enquiry.preferredTime : "To be confirmed by our team";
+
+    // Determine meeting details
+    const meetingDetails =
+      enquiry.preferredDate || enquiry.preferredTime
+        ? "To be confirmed by our team"
+        : "To be confirmed by our team";
+
+    // Replace placeholders with escaped values
+    const populatedHtml = htmlTemplate
+      .replace(/{{firstName}}/g, escapeHtml(firstName))
+      .replace(/{{companyName}}/g, escapeHtml(enquiry.firmName))
+      .replace(/{{preferredDate}}/g, escapeHtml(dateStr))
+      .replace(/{{preferredTime}}/g, escapeHtml(timeStr))
+      .replace(/{{meetingDetails}}/g, escapeHtml(meetingDetails));
+
+    return populatedHtml;
+  } catch (error) {
+    console.error("Error loading confirmation email template:", error);
+    throw error;
+  }
+};
 
 // Generate plain text email content
 const generatePlainTextEmail = (enquiry) => {
@@ -228,6 +279,37 @@ async function createBookDemoForm(req, res) {
     } catch (emailError) {
       // Log email error but do NOT fail the enquiry submission
       console.error("Failed to send enquiry notification email:", emailError);
+      // Enquiry is already saved in database, so this is non-critical
+    }
+
+    // Send confirmation email to user AFTER successful database save
+    try {
+      const confirmationSubject = "Demo Confirmation - ImCam Hub";
+      const confirmationHtml = generateConfirmationEmail(bookDemoForm);
+      
+      // Generate plain text version for fallback
+      const plainTextConfirmation = `
+Hi ${getFirstName(bookDemoForm.fullName)},
+
+Thank you for your interest in ImCam Hub!
+
+We've received your demo request for ${bookDemoForm.firmName}.
+
+Demo Meeting: ${bookDemoForm.firmName}
+Date: ${bookDemoForm.preferredDate ? new Date(bookDemoForm.preferredDate).toLocaleDateString() : "To be confirmed"}
+Time: ${bookDemoForm.preferredTime || "To be confirmed"}
+
+Our team will contact you shortly to confirm the meeting details.
+
+Speak soon!
+Best regards,
+Team ImCam Hub
+      `.trim();
+
+      await sendEmail(bookDemoForm.workEmail, confirmationSubject, plainTextConfirmation, confirmationHtml);
+    } catch (emailError) {
+      // Log email error but do NOT fail the enquiry submission
+      console.error("Failed to send user confirmation email:", emailError);
       // Enquiry is already saved in database, so this is non-critical
     }
 

@@ -16,6 +16,10 @@ const problemSolutionSectionSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    title2: {
+      type: String,
+      trim: true,
+    },
     description: {
       type: String,
       required: true,

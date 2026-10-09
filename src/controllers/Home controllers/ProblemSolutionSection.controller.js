@@ -2,7 +2,7 @@ const { isValidObjectId } = require("mongoose");
 const ProblemSolutionSection = require("../../model/Homepage/problemSolutionSection.model");
 
 const requiredTextFields = ["title", "highlightedTitle", "description"];
-const optionalTextFields = ["badgeText"];
+const optionalTextFields = ["badgeText", "title2"];
 
 const parseBoolean = (value) => {
   if (typeof value === "boolean") return value;
@@ -71,6 +71,7 @@ async function createProblemSolutionSection(req, res) {
       badgeText: req.body.badgeText ? req.body.badgeText.trim() : "",
       title: req.body.title.trim(),
       highlightedTitle: req.body.highlightedTitle.trim(),
+      title2: req.body.title2 ? req.body.title2.trim() : "",
       description: req.body.description.trim(),
       ...(req.body.isActive !== undefined && { isActive: parseBoolean(req.body.isActive) }),
       ...(req.body.displayOrder !== undefined && { displayOrder: req.body.displayOrder }),
