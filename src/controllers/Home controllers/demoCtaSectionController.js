@@ -1,5 +1,5 @@
 const { isValidObjectId } = require("mongoose");
-const DemoCtaSection = require("../../model/Homepage/demoCtaSection");
+const DemoCtaSection = require("../../model/Homepage/DemoCtaSection");
 const uploadImage = require("../../services/Storage.services");
 
 // ---------------------------------------------------------------------------

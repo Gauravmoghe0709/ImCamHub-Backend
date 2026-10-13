@@ -1,5 +1,5 @@
 const { isValidObjectId } = require("mongoose");
-const CaseModulesSection = require("../../model/Homepage/caseModulesSection");
+const CaseModulesSection = require("../../model/Homepage/CaseModulesSection");
 
 // ---------------------------------------------------------------------------
 // Helpers

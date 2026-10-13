@@ -157,7 +157,7 @@ router.delete("/admin/pricing-page/faqs/:id", protectedRoute, deletePricingPageF
 // =====================================================
 // Final CTA — Public Route
 // =====================================================
-router.get("/final-cta", getPublicFinalCta);
+router.get("/pricing-page/final-cta", getPublicFinalCta);
 
 // =====================================================
 // Final CTA — Admin Routes

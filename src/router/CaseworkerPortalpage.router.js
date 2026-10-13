@@ -75,7 +75,7 @@ const {
 // =====================================================
 // Admin Dashboard Hero — Public Route
 // =====================================================
-router.get("/public/admin-dashboard-hero", getPublicCaseworkerPortalHero);
+router.get("/public/caseworker-portal/hero", getPublicCaseworkerPortalHero);
 
 // =====================================================
 // Admin Dashboard Hero — Admin Routes

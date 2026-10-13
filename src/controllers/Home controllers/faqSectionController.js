@@ -1,7 +1,7 @@
 const { isValidObjectId } = require("mongoose");
-const FaqSection = require("../../model/Homepage/faqSection");
-const Faq = require("../../model/Homepage/faq");
-const FaqCta = require("../../model/Homepage/faqCta");
+const FaqSection = require("../../model/Homepage/FaqSection");
+const Faq = require("../../model/Homepage/Faq");
+const FaqCta = require("../../model/Homepage/FaqCta");
 
 // ---------------------------------------------------------------------------
 // Helpers

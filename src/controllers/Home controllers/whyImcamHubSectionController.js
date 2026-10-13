@@ -1,5 +1,5 @@
 const { isValidObjectId } = require("mongoose");
-const WhyImcamHubSection = require("../../model/Homepage/whyImcamHubSection");
+const WhyImcamHubSection = require("../../model/Homepage/WhyImcamHubSection");
 
 // ---------------------------------------------------------------------------
 // Helpers

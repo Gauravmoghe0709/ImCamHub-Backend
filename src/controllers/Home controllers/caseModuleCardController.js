@@ -1,5 +1,5 @@
 const { isValidObjectId } = require("mongoose");
-const CaseModuleCard = require("../../model/Homepage/caseModuleCard");
+const CaseModuleCard = require("../../model/Homepage/CaseModuleCard");
 
 // ---------------------------------------------------------------------------
 // Constants
